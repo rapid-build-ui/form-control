@@ -1,0 +1,42 @@
+{
+  "name": "@rapid-build-ui/form-control",
+  "version": "0.0.0",
+  "main": "scripts/form-control.js",
+  "description": "Rapid Build UI Web Components Mixin for all Form Controls: form-control",
+  "license": "MIT",
+  "engines": {
+    "node": "8.x",
+    "npm": "6.x"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "contributors": [
+    {
+      "name": "Judd Younce",
+      "email": "jyounce@yahoo.com",
+      "url": "https://github.com/jyounce"
+    },
+    {
+      "name": "Yevgeniy Okun",
+      "email": "yevgeniyokun@gmail.com",
+      "url": "https://github.com/yokun"
+    },
+    {
+      "name": "Alina Younce",
+      "email": "crisan_alina2003@yahoo.com",
+      "url": "https://github.com/ayounce"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rapid-build-ui/form-control"
+  },
+  "bugs": {
+    "url": "https://github.com/rapid-build-ui/form-control/issues"
+  },
+  "flat": true,
+  "dependencies": {
+    "@rapid-build-ui/rb-base": "^0.0.2"
+  }
+}
