@@ -8,9 +8,7 @@ const Defaults = Base => class extends Base {
 	 ************/
 	connectedCallback() { // :void
 		super.connectedCallback && super.connectedCallback();
-		this.elms = {
-			form: this.closest('form')
-		}
+		this.rb.elms.form = this.closest('form');
 	}
 
 	/* Properties
@@ -26,7 +24,7 @@ const Defaults = Base => class extends Base {
 	/* Getters
 	 **********/
 	get hasForm() { // :boolean (readonly: true if inside form)
-		return !!this.elms.form;
+		return !!this.rb.elms.form;
 	}
 }
 
