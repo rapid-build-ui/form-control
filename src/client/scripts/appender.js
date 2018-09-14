@@ -19,13 +19,13 @@ const Appender = Base => class extends Base {
 	/* Private Methods
 	 ******************/
 	_addHiddenInput() { // :void
-		this.elms.hiddenInput = document.createElement('input');
-		this.elms.hiddenInput.setAttribute('hidden', true);
-		this.elms.hiddenInput.setAttribute('name', this.name);
-		this.elms.form.appendChild(this.elms.hiddenInput);
+		this.rb.elms.hiddenInput = document.createElement('input');
+		this.rb.elms.hiddenInput.setAttribute('hidden', true);
+		this.rb.elms.hiddenInput.setAttribute('name', this.name);
+		this.rb.elms.form.appendChild(this.rb.elms.hiddenInput);
 	}
 	_removeHiddenInput() { // :void
-		this.elms.hiddenInput.remove();
+		this.rb.elms.hiddenInput.remove();
 	}
 
 	/* Event Management
@@ -34,7 +34,7 @@ const Appender = Base => class extends Base {
 		this.rb.events.add(this, 'value-changed', this._setHiddenInputValue);
 		if (!this.hasValidation) return;
 		this.rb.events.add(this, 'validated', this._validateHiddenInput);
-		this.rb.events.add(this.elms.hiddenInput, 'invalid', this._preventNativeErrorrMsg);
+		this.rb.events.add(this.rb.elms.hiddenInput, 'invalid', this._preventNativeErrorrMsg);
 	}
 
 	/* Event Handlers
@@ -44,12 +44,12 @@ const Appender = Base => class extends Base {
 	}
 	_setHiddenInputValue(evt) { // :void (required to natively submit the value)
 		const value = evt.detail.value; // component value
-		this.elms.hiddenInput.value = value;
+		this.rb.elms.hiddenInput.value = value;
 	}
 	_validateHiddenInput(evt) { // :void
 		const valid = evt.detail.valid; // :boolean
 		const eMsg  = valid ? '' : 'invalid'; // empty string sets validity.valid to true
-		this.elms.hiddenInput.setCustomValidity(eMsg);
+		this.rb.elms.hiddenInput.setCustomValidity(eMsg);
 	}
 }
 
