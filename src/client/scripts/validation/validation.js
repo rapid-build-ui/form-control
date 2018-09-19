@@ -12,7 +12,6 @@ const Validation = Base => class extends Base {
 	viewReady() { // :void
 		super.viewReady && super.viewReady();
 		if (!this.hasValidation) return;
-		this.rb.elms.input = this.shadowRoot.querySelector('input');
 		this._attachValidationEvents();
 	}
 
@@ -59,7 +58,7 @@ const Validation = Base => class extends Base {
 		}
 		if (valid) {
 			this._eMsg = '';
-			this.rb.elms.input.setCustomValidity('')
+			this.rb.elms.formControl.setCustomValidity('')
 		}
 		this._valid = valid;
 		this.rb.events.emit(this, 'validated', {
@@ -73,7 +72,7 @@ const Validation = Base => class extends Base {
 		const out = Validators[validator](this.value);
 		if (!out.valid) {
 			this._eMsg = out.message || `${validator} ${Messages['default']}`;
-			this.rb.elms.input.setCustomValidity(out.message);
+			this.rb.elms.formControl.setCustomValidity(out.message);
 		}
 		return out.valid;
 	}
@@ -82,7 +81,7 @@ const Validation = Base => class extends Base {
 		const out = Validators[key](this.value, validator[key]);
 		if (!out.valid) {
 			this._eMsg = out.message || `${validator} ${Messages['default']}`;
-			this.rb.elms.input.setCustomValidity(out.message);
+			this.rb.elms.formControl.setCustomValidity(out.message);
 		}
 		return out.valid;
 	}
@@ -90,7 +89,7 @@ const Validation = Base => class extends Base {
 		let out = await validator(this.value);
 		if (!out.valid) {
 			this._eMsg = out.message || `${validator} ${Messages['default']}`;
-			this.rb.elms.input.setCustomValidity(out.message);
+			this.rb.elms.formControl.setCustomValidity(out.message);
 		}
 		return out.valid;
 	}
@@ -100,6 +99,7 @@ const Validation = Base => class extends Base {
 	_attachValidationEvents() { // :void
 		if (!this.hasForm) return;
 		this.rb.events.add(this.rb.elms.form, 'submit', this._validateForm);
+
 	}
 
 	/* Event Handlers
@@ -110,7 +110,33 @@ const Validation = Base => class extends Base {
 		evt.preventDefault(); // prevents browser from submitting the form
 		this._dirty   = true;    // TODO: improve
 		this._blurred = true;    // TODO: improve
-		this.rb.elms.input.focus(); // TODO: only focus first invalid form component
+
+		this._setFocus(evt); // TODO: only focus first invalid form component
+	}
+
+	_setFocus(e) {
+		const rbFormControls = ViewHelper.getRbFormControls(this.rb.elms.form);
+		console.log(rbFormControls);
+		for (const item of rbFormControls) {
+			if (!item._valid) {
+				item.rb.elms.focusElm.focus();
+				break;
+			}
+		}
+	}
+}
+
+/* View Helper
+ **************/
+const ViewHelper = {
+	getRbFormControls(form) { // object[]
+		return Array.from( // converts NodeList to Array (needed for [].filter())
+			form.querySelectorAll('*') // returns NodeList
+		).filter(component => {
+			const tagName  = component.tagName.toLowerCase();
+			const tagNames = ['rb-input', 'rb-radios'];
+			return tagNames.includes(tagName);
+		});
 	}
 }
 
