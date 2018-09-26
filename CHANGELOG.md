@@ -1,3 +1,17 @@
+## [0.0.3](https://github.com/rapid-build-ui/form-control/compare/v0.0.2...v0.0.3) (2018-09-26)
+
+
+### Bug Fixes
+
+* **focus:** fix to focus first invalid element on form submit ([71882d5](https://github.com/rapid-build-ui/form-control/commit/71882d5))
+
+
+### Dependencies
+
+* **bump:** dep rb-base v0.0.4 ([1d76155](https://github.com/rapid-build-ui/form-control/commit/1d76155))
+
+
+
 ## [0.0.2](https://github.com/rapid-build-ui/form-control/compare/v0.0.1...v0.0.2) (2018-09-14)
 
 
