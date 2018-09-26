@@ -116,7 +116,7 @@ const Validation = Base => class extends Base {
 
 	_setFocus(e) {
 		const rbFormControls = ViewHelper.getRbFormControls(this.rb.elms.form);
-		console.log(rbFormControls);
+		// console.log(rbFormControls);
 		for (const item of rbFormControls) {
 			if (!item._valid) {
 				item.rb.elms.focusElm.focus();
