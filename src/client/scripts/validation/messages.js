@@ -9,7 +9,7 @@ const Messages = {
 	minMaxLength: 'length should be between',
 	number:       'number is not valid',
 	range:        'range should be between',
-	regEx:        'regEx invalid',
+	regEx:        'invalid format',
 	required:     'required'
 }
 
