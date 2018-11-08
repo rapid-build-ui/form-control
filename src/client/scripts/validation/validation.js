@@ -134,7 +134,7 @@ const ViewHelper = {
 			form.querySelectorAll('*') // returns NodeList
 		).filter(component => {
 			const tagName  = component.tagName.toLowerCase();
-			const tagNames = ['rb-input', 'rb-radios'];
+			const tagNames = ['rb-input', 'rb-radios', 'rb-checkbox', 'rb-checkboxes'];
 			return tagNames.includes(tagName);
 		});
 	}
