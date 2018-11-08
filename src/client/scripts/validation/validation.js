@@ -3,6 +3,7 @@
  *********************/
 import { props } from '../../../rb-base/scripts/rb-base.js';
 import Type from '../../../rb-base/scripts/type-service.js';
+import Helpers from '../helpers.js'
 import Messages from './messages.js'
 import Validators from './validators.js'
 
@@ -108,35 +109,19 @@ const Validation = Base => class extends Base {
 		this.validate();
 		if (this.rb.elms.form.checkValidity()) return;
 		evt.preventDefault(); // prevents browser from submitting the form
-		this._dirty   = true;    // TODO: improve
-		this._blurred = true;    // TODO: improve
-
-		this._setFocus(evt); // TODO: only focus first invalid form component
+		this._dirty   = true; // TODO: improve
+		this._blurred = true; // TODO: improve
+		this._setFocus(evt);
 	}
 
-	_setFocus(e) {
-		const rbFormControls = ViewHelper.getRbFormControls(this.rb.elms.form);
+	_setFocus(evt) { // :void (only focus first invalid form component)
+		const rbFormControls = Helpers.getRbFormControls(this.rb.elms.form);
 		// console.log(rbFormControls);
 		for (const item of rbFormControls) {
-			if (!item._valid) {
-				item.rb.elms.focusElm.focus();
-				break;
-			}
+			if (!!item._valid) continue;
+			item.rb.elms.focusElm.focus();
+			break;
 		}
-	}
-}
-
-/* View Helper
- **************/
-const ViewHelper = {
-	getRbFormControls(form) { // object[]
-		return Array.from( // converts NodeList to Array (needed for [].filter())
-			form.querySelectorAll('*') // returns NodeList
-		).filter(component => {
-			const tagName  = component.tagName.toLowerCase();
-			const tagNames = ['rb-input', 'rb-radios', 'rb-checkbox', 'rb-checkboxes'];
-			return tagNames.includes(tagName);
-		});
 	}
 }
 
