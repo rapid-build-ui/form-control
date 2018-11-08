@@ -109,8 +109,8 @@ const Validation = Base => class extends Base {
 		this.validate();
 		if (this.rb.elms.form.checkValidity()) return;
 		evt.preventDefault(); // prevents browser from submitting the form
-		this._dirty   = true; // TODO: improve
-		this._blurred = true; // TODO: improve
+		if (Type.is.boolean(this._dirty))   this._dirty   = true; // ex: rb-input
+		if (Type.is.boolean(this._blurred)) this._blurred = true; // ex: rb-input
 		this._setFocus(evt);
 	}
 
