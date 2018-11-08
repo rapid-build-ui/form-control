@@ -106,7 +106,7 @@ const Validation = Base => class extends Base {
 	/* Event Handlers
 	 *****************/
 	_validateForm(evt) { // :void
-		this.validate();
+		this.validate(); // TODO: check promise support
 		if (this.rb.elms.form.checkValidity()) return;
 		evt.preventDefault(); // prevents browser from submitting the form
 		if (Type.is.boolean(this._dirty))   this._dirty   = true; // ex: rb-input
