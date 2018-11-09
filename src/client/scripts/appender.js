@@ -47,9 +47,9 @@ const Appender = Base => class extends Base {
 		this.rb.elms.hiddenInput.value = value;
 	}
 	_validateHiddenInput(evt) { // :void
-		this.rb.elms.hiddenInput.setCustomValidity(
-			evt.detail.validity.message
-		);
+		const validity = evt.detail.validity
+		// console.log(`${this.localName.toUpperCase()} HIDDEN INPUT:`, validity);
+		this.rb.elms.hiddenInput.setCustomValidity(validity.message);
 	}
 }
 
