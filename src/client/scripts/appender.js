@@ -47,9 +47,9 @@ const Appender = Base => class extends Base {
 		this.rb.elms.hiddenInput.value = value;
 	}
 	_validateHiddenInput(evt) { // :void
-		const valid = evt.detail.valid; // :boolean
-		const eMsg  = valid ? '' : 'invalid'; // empty string sets validity.valid to true
-		this.rb.elms.hiddenInput.setCustomValidity(eMsg);
+		this.rb.elms.hiddenInput.setCustomValidity(
+			evt.detail.validity.message
+		);
 	}
 }
 

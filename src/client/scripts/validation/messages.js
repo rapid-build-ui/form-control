@@ -2,7 +2,7 @@
  * VALIDATION DEFAULT MESSAGES
  ******************************/
 const Messages = {
-	default:      'is not valid',
+	default:      'invalid',
 	email:        'invalid email',
 	maxLength:    'maximum length',
 	minLength:    'minimum length',

@@ -42,57 +42,29 @@ const Validation = Base => class extends Base {
 	 *****************/
 	async validate() { // :void
 		if (!this.hasValidation) return;
-		let valid = true;
+		let validity = { valid: true, message: '' };
 		for (const validator of this.validation) {
-			if (!validator) break;
-			if (!valid) break;
+			if (!validity.valid) break;
 			switch(true) {
 				case Type.is.function(validator):
-					valid = await this._validateCustom.call(this, validator)
+					validity = await validator(this.value);
 					break;
 				case Type.is.object(validator):
-					valid = this._validateObject.call(this, validator);
+					const key = Object.keys(validator)[0];
+					validity = Validators[key](this.value, validator[key]);
 					break;
-				default:
-					valid = this._validateSimple(validator);
+				default: // validator is string
+					validity = Validators[validator](this.value);
 			}
+			if (validity.valid) { validity.message = ''; continue; };
+			if (!validity.message) validity.message = Messages['default'];
 		}
-		if (valid) {
-			this._eMsg = '';
-			this.rb.elms.formControl.setCustomValidity('')
-		}
-		this._valid = valid;
-		this.rb.events.emit(this, 'validated', {
-			detail: { valid }
+		this._eMsg  = validity.message; // used in template
+		this._valid = validity.valid;   // used in template
+		this.rb.elms.formControl.setCustomValidity(validity.message); // empty string clears error and makes valid
+		this.rb.events.emit(this, 'validated', { // ex: see appender.js
+			detail: { validity }
 		});
-	}
-
-	/* Validation
-	 *************/
-	_validateSimple(validator) { // :boolean
-		const out = Validators[validator](this.value);
-		if (!out.valid) {
-			this._eMsg = out.message || `${validator} ${Messages['default']}`;
-			this.rb.elms.formControl.setCustomValidity(out.message);
-		}
-		return out.valid;
-	}
-	_validateObject(validator) { // :boolean
-		const key = Object.keys(validator)[0];
-		const out = Validators[key](this.value, validator[key]);
-		if (!out.valid) {
-			this._eMsg = out.message || `${validator} ${Messages['default']}`;
-			this.rb.elms.formControl.setCustomValidity(out.message);
-		}
-		return out.valid;
-	}
-	async _validateCustom(validator) { // :boolean (validator is function)
-		let out = await validator(this.value);
-		if (!out.valid) {
-			this._eMsg = out.message || `${validator} ${Messages['default']}`;
-			this.rb.elms.formControl.setCustomValidity(out.message);
-		}
-		return out.valid;
 	}
 
 	/* Event Management
