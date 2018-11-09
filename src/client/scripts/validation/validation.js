@@ -100,7 +100,6 @@ const Validation = Base => class extends Base {
 	_attachValidationEvents() { // :void
 		if (!this.hasForm) return;
 		this.rb.events.add(this.rb.elms.form, 'submit', this._validateForm);
-
 	}
 
 	/* Event Handlers
