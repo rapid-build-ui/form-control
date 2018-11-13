@@ -1,6 +1,6 @@
 {
   "name": "@rapid-build-ui/form-control",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "scripts/form-control.js",
   "description": "Rapid Build UI Web Components Mixin for all Form Controls: form-control",
   "license": "MIT",

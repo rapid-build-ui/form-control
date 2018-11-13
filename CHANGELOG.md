@@ -1,3 +1,17 @@
+## [0.0.4](https://github.com/rapid-build-ui/form-control/compare/v0.0.3...v0.0.4) (2018-11-13)
+
+
+### Features
+
+* **pristine method:** create and expose setPristine() method on parent form and rb form controls ([7af804c](https://github.com/rapid-build-ui/form-control/commit/7af804c))
+
+
+### Dependencies
+
+* **bump:** dep rb-base v0.0.5 ([156bc61](https://github.com/rapid-build-ui/form-control/commit/156bc61))
+
+
+
 ## [0.0.3](https://github.com/rapid-build-ui/form-control/compare/v0.0.2...v0.0.3) (2018-09-26)
 
 
