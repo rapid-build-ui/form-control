@@ -3,6 +3,7 @@
  *********************/
 import { props } from '../../../rb-base/scripts/rb-base.js';
 import Type from '../../../rb-base/scripts/type-service.js';
+import Helpers from '../helpers.js'
 import Messages from './messages.js'
 import Validators from './validators.js'
 
@@ -41,102 +42,84 @@ const Validation = Base => class extends Base {
 	 *****************/
 	async validate() { // :void
 		if (!this.hasValidation) return;
-		let valid = true;
+		let validity = { valid: true, message: '' };
 		for (const validator of this.validation) {
-			if (!validator) break;
-			if (!valid) break;
+			if (!validity.valid) break;
 			switch(true) {
 				case Type.is.function(validator):
-					valid = await this._validateCustom.call(this, validator)
+					validity = await validator(this.value);
 					break;
 				case Type.is.object(validator):
-					valid = this._validateObject.call(this, validator);
+					const key = Object.keys(validator)[0];
+					validity = Validators[key](this.value, validator[key]);
 					break;
-				default:
-					valid = this._validateSimple(validator);
+				default: // validator is string
+					validity = Validators[validator](this.value);
 			}
+			if (validity.valid) { validity.message = ''; continue; };
+			if (!validity.message) validity.message = Messages['default'];
 		}
-		if (valid) {
-			this._eMsg = '';
-			this.rb.elms.formControl.setCustomValidity('')
-		}
-		this._valid = valid;
-		this.rb.events.emit(this, 'validated', {
-			detail: { valid }
+		this.setValidity(validity);
+	}
+	setDirty(dirty) { // :void  (ex: rb-input)
+		// console.log(`${this.localName.toUpperCase()}:`, 'set dirty');
+		if (Type.is.boolean(this._dirty))   this._dirty   = dirty.dirty;
+		if (Type.is.boolean(this._blurred)) this._blurred = dirty.blurred;
+	}
+	setValidity(validity) { // :void
+		// console.log(`${this.localName.toUpperCase()}:`, 'set validity');
+		this._eMsg  = validity.message; // used in template
+		this._valid = validity.valid;   // used in template
+		this.rb.elms.formControl.setCustomValidity(validity.message); // empty string clears error and makes valid
+		this.rb.events.emit(this, 'validated', { // ex: appender.js
+			detail: { validity }
 		});
 	}
-
-	/* Validation
-	 *************/
-	_validateSimple(validator) { // :boolean
-		const out = Validators[validator](this.value);
-		if (!out.valid) {
-			this._eMsg = out.message || `${validator} ${Messages['default']}`;
-			this.rb.elms.formControl.setCustomValidity(out.message);
-		}
-		return out.valid;
-	}
-	_validateObject(validator) { // :boolean
-		const key = Object.keys(validator)[0];
-		const out = Validators[key](this.value, validator[key]);
-		if (!out.valid) {
-			this._eMsg = out.message || `${validator} ${Messages['default']}`;
-			this.rb.elms.formControl.setCustomValidity(out.message);
-		}
-		return out.valid;
-	}
-	async _validateCustom(validator) { // :boolean (validator is function)
-		let out = await validator(this.value);
-		if (!out.valid) {
-			this._eMsg = out.message || `${validator} ${Messages['default']}`;
-			this.rb.elms.formControl.setCustomValidity(out.message);
-		}
-		return out.valid;
+	setPristine() { // :void
+		// console.log(`${this.localName.toUpperCase()}:`, 'set pristine');
+		this.setDirty({ blurred: false, dirty: false });
+		this.setValidity({ valid: true, message: '' });
 	}
 
 	/* Event Management
 	 *******************/
 	_attachValidationEvents() { // :void
 		if (!this.hasForm) return;
-		this.rb.events.add(this.rb.elms.form, 'submit', this._validateForm);
-
+		this._addFormEvents();
+		this.rb.events.add(this.rb.elms.form, 'submit', this._validateForm, {
+			capture: true // fire our event first, no guarantees
+		});
+	}
+	_addFormEvents() { // :void
+		if (this.rb.elms.form.rb) return; // only add it once
+		this.rb.elms.form.rb = {
+			setPristine: () => {
+				// console.log('FORM:', 'set pristine');
+				const rbFormControls = Helpers.getRbFormControls(this.rb.elms.form);
+				for (const control of rbFormControls) {
+					if (!control.hasValidation) continue;
+					control.setPristine();
+				}
+			}
+		}
 	}
 
 	/* Event Handlers
 	 *****************/
 	_validateForm(evt) { // :void
-		this.validate();
+		this.validate(); // TODO: check promise support
 		if (this.rb.elms.form.checkValidity()) return;
 		evt.preventDefault(); // prevents browser from submitting the form
-		this._dirty   = true;    // TODO: improve
-		this._blurred = true;    // TODO: improve
-
-		this._setFocus(evt); // TODO: only focus first invalid form component
+		this.setDirty({ blurred: true, dirty: true });
+		this._setFocus(evt);
 	}
-
-	_setFocus(e) {
-		const rbFormControls = ViewHelper.getRbFormControls(this.rb.elms.form);
-		// console.log(rbFormControls);
-		for (const item of rbFormControls) {
-			if (!item._valid) {
-				item.rb.elms.focusElm.focus();
-				break;
-			}
+	_setFocus(evt) { // :void (only focus first invalid form component)
+		const rbFormControls = Helpers.getRbFormControls(this.rb.elms.form);
+		for (const control of rbFormControls) {
+			if (!!control._valid) continue;
+			control.rb.elms.focusElm.focus();
+			break;
 		}
-	}
-}
-
-/* View Helper
- **************/
-const ViewHelper = {
-	getRbFormControls(form) { // object[]
-		return Array.from( // converts NodeList to Array (needed for [].filter())
-			form.querySelectorAll('*') // returns NodeList
-		).filter(component => {
-			const tagName  = component.tagName.toLowerCase();
-			const tagNames = ['rb-input', 'rb-radios'];
-			return tagNames.includes(tagName);
-		});
 	}
 }
 

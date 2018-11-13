@@ -101,7 +101,7 @@ const Help = {
 			}
 		}
 		return val.toString().trim().length === 0 ||
-			  Type.is.object(params) ? val.toString().trim().length >= params[lengthKey] : val.toString().trim().length >= params;
+			Type.is.object(params) ? val.toString().trim().length >= params[lengthKey] : val.toString().trim().length >= params;
 	},
 
 	setMinMaxMsgParams(params, minOrMax) {
@@ -114,7 +114,6 @@ const Validators = {
 		if (!val) return {valid: true};
 		return /^[-]?\d{1,9}(\.\d{1,2})?$/.test(val);
 	},
-
 
 	date(val) {
 		if (!val || Type.is.undefined(val)) return true;
@@ -190,7 +189,6 @@ const Validators = {
 		return output;
 	},
 
-
 	noDups(val, params={}) {
 		if (!val) return {valid: true};
 		if (!Type.is.array(val)) return true;
@@ -199,24 +197,22 @@ const Validators = {
 	},
 
 	number(val, params={}) {
-		var re;
-		if (!val) return {valid: true};
-		re = params.positive ? /^\d+\.?\d*$/ : /^\-?\d+\.?\d*$/;
+		if (!val) return { valid: true };
+		var re = params.positive ? /^\d+\.?\d*$/ : /^\-?\d+\.?\d*$/;
 		return {
-					valid: re.test(val),
-					message: `${Messages['number']}`
-				}
+			valid: re.test(val),
+			message: `${Messages['number']}`
+		}
 	},
-
 
 	phone(val) {
 		if (!val) return {valid: true};
 		// if (/[\W]|\_/.test(val)) return false;
 
 		return {
-					valid: /^[0-9]{10}$/.test(val),
-					message: `${Messages['phone']}`
-				}
+			valid: /^[0-9]{10}$/.test(val),
+			message: `${Messages['phone']}`
+		}
 	},
 
 	phoneExt(val, params={}) {
@@ -241,13 +237,13 @@ const Validators = {
 	},
 
 	required(val, params) {
+		const valid = Type.is.array(val) ?
+			Help.arrayRequired(val, params) :
+			Help.stringRequired(val);
 		return {
-					valid: Type.is.array(val) ?
-						Help.arrayRequired(val, params) :
-						Help.stringRequired(val),
-					message: `${Messages['required']}`
-				}
-
+			valid,
+			message: `${Messages['required']}`
+		}
 	},
 
 	validCharset(val, params) {

@@ -8,6 +8,7 @@ const Defaults = Base => class extends Base {
 	 ************/
 	connectedCallback() { // :void
 		super.connectedCallback && super.connectedCallback();
+		this.rb.isFormControl = true;
 		this.rb.elms.form = this.closest('form');
 	}
 
