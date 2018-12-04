@@ -74,7 +74,16 @@ const Validation = Base => class extends Base {
 		this.rb.events.emit(this, 'validated', { // ex: appender.js
 			detail: { validity }
 		});
+		this.setChildrenValidity(validity)
 	}
+
+	setChildrenValidity(validity) {
+		const rbChildrenFormControls = Helpers.getRbFormControls(this.shadowRoot);
+		for (const control of rbChildrenFormControls) {
+			control.setValidity({ valid: validity.valid, message: '' })
+		}
+	}
+
 	setPristine() { // :void
 		// console.log(`${this.localName.toUpperCase()}:`, 'set pristine');
 		this.setDirty({ blurred: false, dirty: false });
