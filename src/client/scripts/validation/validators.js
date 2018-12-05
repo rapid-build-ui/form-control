@@ -7,20 +7,8 @@ import Messages from './messages.js'
 /* Helpers (all return boolean)
  **********/
 const Help = {
-	arrayRequired(val, params) {
-		var fn, isValid, item, j, len;
-		isValid = false;
-		if (!val) return isValid;
-		if (params.generalArray) return !!val.length;
-		fn = item => {
-			if (!item.selected) return;
-			return isValid = true;
-		};
-		for (j = 0, len = val.length; j < len; j++) {
-			item = val[j];
-			fn(item);
-		}
-		return isValid;
+	arrayRequired(val) {
+		return !!val.length;
 	},
 
 	stringRequired(val) {
@@ -236,9 +224,9 @@ const Validators = {
 		return {valid: val.match(params)};
 	},
 
-	required(val, params) {
+	required(val) {
 		const valid = Type.is.array(val) ?
-			Help.arrayRequired(val, params) :
+			Help.arrayRequired(val) :
 			Help.stringRequired(val);
 		return {
 			valid,
