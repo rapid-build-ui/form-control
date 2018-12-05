@@ -1,3 +1,18 @@
+## [0.0.5](https://github.com/rapid-build-ui/form-control/compare/v0.0.4...v0.0.5) (2018-12-05)
+
+
+### Bug Fixes
+
+* **validation:** array required ([42c4ee3](https://github.com/rapid-build-ui/form-control/commit/42c4ee3))
+
+
+### Features
+
+* **bump:** dep rb-base v0.0.6 ([d90c704](https://github.com/rapid-build-ui/form-control/commit/d90c704))
+* **validation:** set validity for children form controls ([3504dd1](https://github.com/rapid-build-ui/form-control/commit/3504dd1))
+
+
+
 ## [0.0.4](https://github.com/rapid-build-ui/form-control/compare/v0.0.3...v0.0.4) (2018-11-13)
 
 
