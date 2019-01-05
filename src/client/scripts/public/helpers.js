@@ -2,9 +2,9 @@
  * FORM CONTROL HELPERS
  ***********************/
 const Helpers = {
-	getRbFormControls(form) { // object[]
+	getRbFormControls(rootElm) { // object[]
 		// spread converts NodeList to Array, needed for filter()
-		return [...form.querySelectorAll('*')].filter(elm => {
+		return [...rootElm.querySelectorAll('*')].filter(elm => {
 			return Boolean(elm.rb && elm.rb.isFormControl);
 		});
 	}

@@ -1,9 +1,9 @@
-/************************
- * FORM CONTROL DEFAULTS
- ************************/
-import { props } from '../../rb-base/scripts/rb-base.js';
+/******************************
+ * FORM CONTROL DEFAULTS MIXIN
+ ******************************/
+import { props } from '../../../../rb-base/scripts/rb-base.js';
 
-const Defaults = Base => class extends Base {
+const Defaults = BaseElm => class extends BaseElm {
 	/* Lifecycle
 	 ************/
 	connectedCallback() { // :void

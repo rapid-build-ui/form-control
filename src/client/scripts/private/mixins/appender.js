@@ -1,7 +1,7 @@
-/*******************
- * APPENDER SERVICE
- *******************/
-const Appender = Base => class extends Base {
+/*****************
+ * APPENDER MIXIN
+ *****************/
+const Appender = BaseElm => class extends BaseElm {
 	/* Lifecycle
 	 ************/
 	connectedCallback() { // :void

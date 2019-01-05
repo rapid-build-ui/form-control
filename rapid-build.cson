@@ -14,8 +14,7 @@ common:
 		from:
 			minFile:
 				scripts: [
-					'scripts/!(form-control.js)'
-					'scripts/validation/**'
+					'scripts/**/*.js'
 				]
 
 	extra:
