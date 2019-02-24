@@ -1,7 +1,9 @@
-/*******************
- * APPENDER SERVICE
- *******************/
-const Appender = Base => class extends Base {
+/*****************
+ * APPENDER MIXIN
+ *****************/
+import Type from '../../../../rb-base/scripts/public/services/type.js';
+
+const Appender = BaseElm => class extends BaseElm {
 	/* Lifecycle
 	 ************/
 	connectedCallback() { // :void
@@ -42,14 +44,25 @@ const Appender = Base => class extends Base {
 	_preventNativeErrorrMsg(evt) { // :void (prevents native browser error message)
 		evt.preventDefault();
 	}
-	_setHiddenInputValue(evt) { // :void (required to natively submit the value)
-		const value = evt.detail.value; // component value
-		this.rb.elms.hiddenInput.value = value;
-	}
 	_validateHiddenInput(evt) { // :void
 		const validity = evt.detail.validity
-		// console.log(`${this.localName.toUpperCase()} HIDDEN INPUT:`, validity);
+		// console.log(`HIDDEN INPUT ${this.localName.slice(3).toUpperCase()}:`, validity);
 		this.rb.elms.hiddenInput.setCustomValidity(validity.message);
+	}
+	/* Required to natively submit the value.
+	 * For arrays and objects JSON.stringify needed.
+	 * Without it hidden input value will be (examples):
+	 * - array:  "thor,superman,wolverine"
+	 * - object: "[object Object]"
+	 * Then to get the value server can run:
+	 * - JSON.parse(decodeURIComponent(value))
+	 ***************************************************/
+	_setHiddenInputValue(evt) { // :void
+		let value = evt.detail.value; // component value
+		const stringify = Type.is.array(value) || Type.is.object(value);
+		if (stringify) value = JSON.stringify(value);
+		// console.log(`${this.localName.slice(3).toUpperCase()}:`, value);
+		this.rb.elms.hiddenInput.value = value;
 	}
 }
 

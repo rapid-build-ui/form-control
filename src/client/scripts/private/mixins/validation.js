@@ -1,13 +1,13 @@
-/*********************
- * VALIDATION SERVICE
- *********************/
-import { props } from '../../../rb-base/scripts/rb-base.js';
-import Type from '../../../rb-base/scripts/type-service.js';
-import Helpers from '../helpers.js'
-import Messages from './messages.js'
-import Validators from './validators.js'
+/*******************
+ * VALIDATION MIXIN
+ *******************/
+import { props }  from '../../../../rb-base/scripts/rb-base.js';
+import Type       from '../../../../rb-base/scripts/public/services/type.js';
+import Helpers    from '../../public/helpers.js'
+import Messages   from '../../public/validation/messages.js'
+import Validators from '../../public/validation/validators.js'
 
-const Validation = Base => class extends Base {
+const Validation = BaseElm => class extends BaseElm {
 	/* Lifecycle
 	 ************/
 	viewReady() { // :void
