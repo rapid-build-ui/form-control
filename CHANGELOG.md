@@ -1,3 +1,17 @@
+## [0.0.7](https://github.com/rapid-build-ui/form-control/compare/v0.0.6...v0.0.7) (2019-03-05)
+
+
+### Features
+
+* **disabled api option:** support true false attribute values ([5f6fa2c](https://github.com/rapid-build-ui/form-control/commit/5f6fa2c))
+
+
+### Dependencies
+
+* **bump:** dep rb-base v0.0.8 ([13b885a](https://github.com/rapid-build-ui/form-control/commit/13b885a))
+
+
+
 ## [0.0.6](https://github.com/rapid-build-ui/form-control/compare/v0.0.5...v0.0.6) (2019-02-24)
 
 
