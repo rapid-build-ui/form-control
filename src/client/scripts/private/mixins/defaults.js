@@ -2,6 +2,7 @@
  * FORM CONTROL DEFAULTS MIXIN
  ******************************/
 import { props } from '../../../../rb-base/scripts/rb-base.js';
+import Converter from '../../../../rb-base/scripts/public/props/converters.js';
 
 const Defaults = BaseElm => class extends BaseElm {
 	/* Lifecycle
@@ -17,8 +18,10 @@ const Defaults = BaseElm => class extends BaseElm {
 	static get props() { // :object
 		return {
 			...super.props,
-			disabled: props.boolean,
-			name: props.string
+			name: props.string,
+			disabled: Object.assign({}, props.boolean, {
+				deserialize: Converter.valueless
+			})
 		}
 	}
 
