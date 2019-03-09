@@ -74,13 +74,14 @@ const Validation = BaseElm => class extends BaseElm {
 		this.rb.events.emit(this, 'validated', { // ex: appender.js
 			detail: { validity }
 		});
-		this.setChildrenValidity(validity)
+		this.setChildrenValidity(validity);
 	}
 
-	setChildrenValidity(validity) {
+	setChildrenValidity(validity) { // :void (recursive)
 		const rbChildrenFormControls = Helpers.getRbFormControls(this.shadowRoot);
 		for (const control of rbChildrenFormControls) {
-			control.setValidity({ valid: validity.valid, message: '' })
+			if (!control.showErrorMessage) validity.message = ''; // default
+			control.setValidity(validity);
 		}
 	}
 
@@ -102,12 +103,28 @@ const Validation = BaseElm => class extends BaseElm {
 	_addFormEvents() { // :void
 		if (this.rb.elms.form.rb) return; // only add it once
 		this.rb.elms.form.rb = {
-			setPristine: () => {
-				// console.log('FORM:', 'set pristine');
+			setPristine: () => { // :void
 				const rbFormControls = Helpers.getRbFormControls(this.rb.elms.form);
 				for (const control of rbFormControls) {
 					if (!control.hasValidation) continue;
 					control.setPristine();
+				}
+			},
+			validate: async (fromRbButton = false) => { // :void
+				const rbFormControls = Helpers.getRbFormControls(this.rb.elms.form);
+				let controlFocused = false;
+				for (const control of rbFormControls) {
+					if (!control.hasValidation) continue;
+					await control.validate();
+					if (control._valid) {
+						// technique to prevent validating twice in this._validateForm()
+						if (fromRbButton) control.rb.rbButtonValidated = true;
+						continue;
+					}
+					control.setDirty({ blurred: true, dirty: true });
+					if (controlFocused) continue;
+					control.rb.elms.focusElm.focus();
+					controlFocused = true;
 				}
 			}
 		}
@@ -115,8 +132,9 @@ const Validation = BaseElm => class extends BaseElm {
 
 	/* Event Handlers
 	 *****************/
-	_validateForm(evt) { // :void
-		this.validate(); // TODO: check promise support
+	async _validateForm(evt) { // :void
+		if (this.rb.rbButtonValidated) return delete this.rb.rbButtonValidated; // rb-button already validated
+		await this.validate(); // TODO: check promise support
 		if (this.rb.elms.form.checkValidity()) return;
 		evt.preventDefault(); // prevents browser from submitting the form
 		this.setDirty({ blurred: true, dirty: true });
