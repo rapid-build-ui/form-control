@@ -38,7 +38,6 @@ const Appender = BaseElm => class extends BaseElm {
 	 *******************/
 	_attachAppenderEvents() { // :void
 		this.rb.events.add(this, 'value-changed', this._setHiddenInputValue);
-		if (!this.hasValidation) return;
 		this.rb.events.add(this, 'validated', this._validateHiddenInput);
 		this.rb.events.add(this.rb.formControl.hiddenInput, 'invalid', this._preventNativeErrorrMsg);
 	}
@@ -46,9 +45,11 @@ const Appender = BaseElm => class extends BaseElm {
 	/* Event Handlers
 	 *****************/
 	_preventNativeErrorrMsg(evt) { // :void (prevents native browser error message)
+		if (!this.hasValidation) return;
 		evt.preventDefault();
 	}
 	_validateHiddenInput(evt) { // :void
+		if (!this.hasValidation) return;
 		const validity = evt.detail.validity
 		// console.log(`HIDDEN INPUT ${this.localName.slice(3).toUpperCase()}:`, validity);
 		this.rb.formControl.hiddenInput.setCustomValidity(validity.message);
