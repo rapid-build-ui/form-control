@@ -22,7 +22,7 @@ const Appender = BaseElm => class extends BaseElm {
 	 ******************/
 	_addHiddenInput() { // :void
 		this.rb.elms.hiddenInput = document.createElement('input');
-		this.rb.elms.hiddenInput.setAttribute('hidden', true);
+		this.rb.elms.hiddenInput.setAttribute('hidden', '');
 		this.rb.elms.hiddenInput.setAttribute('name', this.name);
 		this.rb.elms.form.appendChild(this.rb.elms.hiddenInput);
 	}
