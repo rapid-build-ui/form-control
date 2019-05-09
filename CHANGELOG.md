@@ -1,3 +1,22 @@
+## [0.0.8](https://github.com/rapid-build-ui/form-control/compare/v0.0.7...v0.0.8) (2019-05-09)
+
+
+### Bug Fixes
+
+* **native form submission:** from not firing when validation is set on the control via js ([7f39ae0](https://github.com/rapid-build-ui/form-control/commit/7f39ae0))
+
+
+### Features
+
+* **form helper:** add validate method onto form.rb object to validate a form from anywhere ([15782af](https://github.com/rapid-build-ui/form-control/commit/15782af))
+
+
+### Dependencies
+
+* **bump:** dep rb-base v0.0.9 ([7601b88](https://github.com/rapid-build-ui/form-control/commit/7601b88))
+
+
+
 ## [0.0.7](https://github.com/rapid-build-ui/form-control/compare/v0.0.6...v0.0.7) (2019-03-05)
 
 
