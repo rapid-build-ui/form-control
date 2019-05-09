@@ -22,12 +22,7 @@ const Validation = BaseElm => class extends BaseElm {
 		return {
 			...super.props,
 			validation: Object.assign({}, props.array, {
-				// support for custom functions
-				deserialize(val) { return eval(val); }
-			}),
-			_eMsg: props.string,
-			_valid: Object.assign({}, props.boolean, {
-				default: true
+				deserialize(val) { return eval(val); } // support for custom functions
 			})
 		}
 	}
@@ -62,71 +57,89 @@ const Validation = BaseElm => class extends BaseElm {
 		this.setValidity(validity);
 	}
 	setDirty(dirty) { // :void  (ex: rb-input)
-		// console.log(`${this.localName.toUpperCase()}:`, 'set dirty');
-		if (Type.is.boolean(this._dirty))   this._dirty   = dirty.dirty;
-		if (Type.is.boolean(this._blurred)) this._blurred = dirty.blurred;
+		this._dirty   = dirty;
+		this._touched = dirty;
 	}
 	setValidity(validity) { // :void
-		// console.log(`${this.localName.toUpperCase()}:`, 'set validity');
-		this._eMsg  = validity.message; // used in template
+		this._error = validity.message; // used in template
 		this._valid = validity.valid;   // used in template
-		this.rb.elms.formControl.setCustomValidity(validity.message); // empty string clears error and makes valid
+		this.rb.formControl.elm.setCustomValidity(validity.message); // empty string clears error and makes valid
 		this.rb.events.emit(this, 'validated', { // ex: appender.js
 			detail: { validity }
 		});
-		this.setChildrenValidity(validity)
+		this.setChildrenValidity(validity);
 	}
-
-	setChildrenValidity(validity) {
+	setChildrenValidity(validity) { // :void (recursive)
 		const rbChildrenFormControls = Helpers.getRbFormControls(this.shadowRoot);
 		for (const control of rbChildrenFormControls) {
-			control.setValidity({ valid: validity.valid, message: '' })
+			if (!control.showErrorMessage) validity.message = ''; // default
+			control.setValidity(validity);
 		}
 	}
-
 	setPristine() { // :void
-		// console.log(`${this.localName.toUpperCase()}:`, 'set pristine');
-		this.setDirty({ blurred: false, dirty: false });
+		this.setDirty(false);
 		this.setValidity({ valid: true, message: '' });
+	}
+
+	/* Form Element
+	 ***************/
+	_addValidationMethodsToForm() { // :void (only add them once)
+		if (this.rb.formControl.form.rb) return;
+
+		this.rb.formControl.form.rb = {
+			setPristine: () => { // :void
+				const rbFormControls = Helpers.getRbFormControls(this.rb.formControl.form);
+				for (const control of rbFormControls) {
+					if (!control.hasValidation) continue;
+					control.setPristine();
+				}
+			},
+			validate: async (fromRbButton = false) => { // :void
+				const rbFormControls = Helpers.getRbFormControls(this.rb.formControl.form);
+				let controlFocused = false;
+				for (const control of rbFormControls) {
+					if (!control.hasValidation) continue;
+					await control.validate();
+					if (control._valid) {
+						// technique to prevent validating twice in this._validateForm()
+						if (fromRbButton) control.rb.formControl.rbButtonValidated = true;
+						continue;
+					}
+					control.setDirty(true);
+					if (controlFocused) continue;
+					control.rb.formControl.focusElm.focus();
+					controlFocused = true;
+				}
+			}
+		}
 	}
 
 	/* Event Management
 	 *******************/
 	_attachValidationEvents() { // :void
 		if (!this.hasForm) return;
-		this._addFormEvents();
-		this.rb.events.add(this.rb.elms.form, 'submit', this._validateForm, {
+		this._addValidationMethodsToForm();
+		this.rb.events.add(this.rb.formControl.form, 'submit', this._validateForm, {
 			capture: true // fire our event first, no guarantees
 		});
-	}
-	_addFormEvents() { // :void
-		if (this.rb.elms.form.rb) return; // only add it once
-		this.rb.elms.form.rb = {
-			setPristine: () => {
-				// console.log('FORM:', 'set pristine');
-				const rbFormControls = Helpers.getRbFormControls(this.rb.elms.form);
-				for (const control of rbFormControls) {
-					if (!control.hasValidation) continue;
-					control.setPristine();
-				}
-			}
-		}
 	}
 
 	/* Event Handlers
 	 *****************/
-	_validateForm(evt) { // :void
-		this.validate(); // TODO: check promise support
-		if (this.rb.elms.form.checkValidity()) return;
+	async _validateForm(evt) { // :void
+		const { formControl } = this.rb;
+		if (formControl.rbButtonValidated) return delete formControl.rbButtonValidated; // rb-button already validated
+		await this.validate(); // TODO: check promise support
+		if (formControl.form.checkValidity()) return;
 		evt.preventDefault(); // prevents browser from submitting the form
-		this.setDirty({ blurred: true, dirty: true });
-		this._setFocus(evt);
+		this.setDirty(true);
+		this._setFocus();
 	}
-	_setFocus(evt) { // :void (only focus first invalid form component)
-		const rbFormControls = Helpers.getRbFormControls(this.rb.elms.form);
+	_setFocus() { // :void (focus first invalid form component)
+		const rbFormControls = Helpers.getRbFormControls(this.rb.formControl.form);
 		for (const control of rbFormControls) {
-			if (!!control._valid) continue;
-			control.rb.elms.focusElm.focus();
+			if (control._valid) continue;
+			control.rb.formControl.focusElm.focus();
 			break;
 		}
 	}
