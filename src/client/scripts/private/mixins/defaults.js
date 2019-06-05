@@ -7,14 +7,18 @@ import Converter from '../../../../rb-base/scripts/public/props/converters.js';
 const Defaults = BaseElm => class extends BaseElm {
 	/* Lifecycle
 	 ************/
+	constructor() {
+		super();
+		// formControl: elm, focusElm and isTextarea set in component
+		this.rb.formControl = {
+			elm:        null,  // form control element for setCustomValidity
+			focusElm:   null,  // element to focus on form submit if invalid
+			form:       null,  // form element that control is in
+			isTextarea: false  // is form control element a textarea
+		};
+	}
 	connectedCallback() { // :void
 		super.connectedCallback && super.connectedCallback();
-		this.rb.formControl = {
-			elm:      null, // form control element for setCustomValidity
-			focusElm: null, // element to focus on form submit if invalid
-			form:     null  // form element that control is in
-		}
-		// formControl: elm and focusElm set in component
 		this.rb.formControl.form = this.closest('form');
 	}
 
