@@ -10,8 +10,9 @@ const Appender = BaseElm => class extends BaseElm {
 		super.connectedCallback && super.connectedCallback();
 		if (!this.hasForm) return;
 		// needed to interact with native form
+		const formTag = this.rb.formControl.isTextarea ? 'textarea' : 'input';
 		Object.assign(this.rb.formControl, {
-			hiddenInput: document.createElement('input')
+			hiddenInput: document.createElement(formTag)
 		});
 		this._addHiddenInput();
 		this._attachAppenderEvents();
@@ -26,6 +27,7 @@ const Appender = BaseElm => class extends BaseElm {
 	 ******************/
 	_addHiddenInput() { // :void
 		const { form, hiddenInput } = this.rb.formControl;
+		hiddenInput.style.display = 'none';
 		hiddenInput.setAttribute('hidden', '');
 		hiddenInput.setAttribute('name', this.name);
 		form.appendChild(hiddenInput);
