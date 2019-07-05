@@ -1,3 +1,22 @@
+## [0.0.9](https://github.com/rapid-build-ui/form-control/compare/v0.0.8...v0.0.9) (2019-07-05)
+
+
+### Bug Fixes
+
+* **appender:** if component is textarea append hidden textarea so value accepts new lines and so forth ([12b22e8](https://github.com/rapid-build-ui/form-control/commit/12b22e8))
+
+
+### Features
+
+* **version:** add to component properties accessible via this.rb.versions.formControl ([eefacf2](https://github.com/rapid-build-ui/form-control/commit/eefacf2))
+
+
+### Dependencies
+
+* **bump:** dep rb-base v0.0.10 ([29f61dc](https://github.com/rapid-build-ui/form-control/commit/29f61dc))
+
+
+
 ## [0.0.8](https://github.com/rapid-build-ui/form-control/compare/v0.0.7...v0.0.8) (2019-05-09)
 
 

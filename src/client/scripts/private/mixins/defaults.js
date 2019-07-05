@@ -9,7 +9,7 @@ const Defaults = BaseElm => class extends BaseElm {
 	 ************/
 	constructor() {
 		super();
-		Object.assign(this.rb.versions, { formControl: '0.0.8' });
+		Object.assign(this.rb.versions, { formControl: '0.0.9' });
 		// formControl: elm, focusElm and isTextarea set in component
 		this.rb.formControl = {
 			elm:        null,  // form control element for setCustomValidity
