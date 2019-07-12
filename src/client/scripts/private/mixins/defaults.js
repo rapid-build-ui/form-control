@@ -1,8 +1,8 @@
 /******************************
  * FORM CONTROL DEFAULTS MIXIN
  ******************************/
-import { props } from '../../../../rb-base/scripts/rb-base.js';
-import Converter from '../../../../rb-base/scripts/public/props/converters.js';
+import { props } from '../../../../base/scripts/base.js';
+import Converter from '../../../../base/scripts/public/props/converters.js';
 
 const Defaults = BaseElm => class extends BaseElm {
 	/* Lifecycle

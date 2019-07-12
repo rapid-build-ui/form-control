@@ -1,7 +1,7 @@
 /*****************
  * APPENDER MIXIN
  *****************/
-import Type from '../../../../rb-base/scripts/public/services/type.js';
+import Type from '../../../../base/scripts/public/services/type.js';
 
 const Appender = BaseElm => class extends BaseElm {
 	/* Lifecycle
