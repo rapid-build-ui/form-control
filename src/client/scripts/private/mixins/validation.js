@@ -1,8 +1,8 @@
 /*******************
  * VALIDATION MIXIN
  *******************/
-import { props }  from '../../../../rb-base/scripts/rb-base.js';
-import Type       from '../../../../rb-base/scripts/public/services/type.js';
+import { props }  from '../../../../base/scripts/base.js';
+import Type       from '../../../../base/scripts/public/services/type.js';
 import Helpers    from '../../public/helpers.js'
 import Messages   from '../../public/validation/messages.js'
 import Validators from '../../public/validation/validators.js'
