@@ -1,3 +1,12 @@
+## [0.0.11](https://github.com/rapid-build-ui/form-control/compare/v0.0.10...v0.0.11) (2019-07-16)
+
+
+### Dependencies
+
+* **bump:** dep base v0.0.12 ([0461a96](https://github.com/rapid-build-ui/form-control/commit/0461a96))
+
+
+
 ## [0.0.10](https://github.com/rapid-build-ui/form-control/compare/v0.0.9...v0.0.10) (2019-07-12)
 
 
